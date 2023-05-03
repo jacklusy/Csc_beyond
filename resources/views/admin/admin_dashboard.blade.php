@@ -24,11 +24,16 @@
 	<link rel="stylesheet" href="{{asset('adminbackend/assets/css/dark-theme.css')}}" />
 	<link rel="stylesheet" href="{{asset('adminbackend/assets/css/semi-dark.css')}}" />
 	<link rel="stylesheet" href="{{asset('adminbackend/assets/css/header-colors.css')}}" />
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 	
 	<!-- Data Table -->
 	<link href="{{asset('adminbackend/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet')}}" />
 	
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
+
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
 	<title>Admin Dashboard</title>
 
 	
@@ -57,7 +62,10 @@
 	</div>
 	<!--end wrapper-->
 	<!--start switcher-->
-	
+	<script
+  src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
+  integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw="
+  crossorigin="anonymous"></script>
 	<!--end switcher-->
 	<!-- Bootstrap JS -->
 	<script src="{{asset('adminbackend/assets/js/bootstrap.bundle.min.js')}}"></script>
@@ -140,6 +148,12 @@
 		});
 	</script>
 
+	<script src="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"></script>
+
+	<script>
+		new PerfectScrollbar('.chat-list');
+		new PerfectScrollbar('.chat-content');
+	</script>
 </body>
 
 </html>

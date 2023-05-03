@@ -9,9 +9,7 @@
     <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
         <div class="container">
             <div class="header-wrap">
-                <div class="logo logo-width-1">
-                    <a href="{{ url('/') }}"><img src="{{asset('frontend/img/logo3.png')}} " alt="logo" /></a>
-                </div>
+                
                 <div class="header-right">
                     
                     <div class="header-action-right">
@@ -25,85 +23,7 @@
                            
                            
                             
-                            <div class="header-action-icon-2">
-                                @php
-                                    if (Auth::check()) {
-                                        $user_id = Auth::user()->id;
-                                        $carts = App\Models\Cart::where('user_id',$user_id)->get();
-                                        $count = $carts->count();
-                                    }
-                                @endphp
-                                <a class="mini-cart-icon" href="{{route('mycart')}}">
-                                    <img alt="Nest" src="{{asset('frontend/assets/imgs/theme/icons/icon-cart.svg')}} " />
-
-                                    @if (Auth::check())
-                                        <span class="pro-count blue">{{$count}}</span>
-                                    @else
-                                        <span class="pro-count blue">0</span>
-                                    @endif
-                                </a>
-                                <a href="{{route('mycart')}}"><span class="lable"></span></a>
-
-                                @if (Auth::check())
-                                    <div class="cart-dropdown-wrap cartdropdownwrap cart-dropdown-hm2">
-                                        @if ($count === 0)
-                                        
-                                        @else
-                                            <ul>
-                                                @foreach ($carts as $cart)
-                                                    <li>
-                                                        <div class="shopping-cart-img">
-                                                            <a href="{{url('product/details/'.$cart['product']['id'].'/'.$cart['product']['product_slug'])}}"><img alt="Nest" src="{{asset($cart['product']['product_thambnail'])}} " /></a>
-                                                        </div>
-                                                        <div class="shopping-cart-title long-paragraph">
-                                                            <h4 class="long-paragraph"><a href="{{url('product/details/'.$cart['product']['id'].'/'.$cart['product']['product_slug'])}}">{{$cart['product']['product_name']}}</a></h4>
-                                                            @if ($cart['product']['discount_price'] == NULL)
-                                                                <h4><span>{{$cart->quantity}} × </span><span>{{$cart['product']['selling_price']}}JD</span> </h4>
-                                                                
-                                                            @else
-                                                                <h4><span>{{$cart->quantity}} × </span><span>{{$cart['product']['discount_price']}}JD</span></h4>
-                                                            @endif
-                                                        </div>
-                                                        <div class="shopping-cart-delete">
-                                                            <a type="submit" href="{{route('delete.cart',$cart->id)}}"><i class="fi-rs-cross-small"></i></a>
-                                                        </div>
-                                                    </li>
-                                                
-                                                @endforeach
-                                            
-                                            </ul>
-                                            
-                                        @endif
-
-                                        <div class="shopping-cart-footer">
-                                            @php
-                                                $AllTotal = 0;
-                                                foreach ($carts as $cart) {
-                                                    $qty = $cart->quantity;
-                                                    if ($cart['product']['discount_price'] == NULL) {
-
-                                                        $selling_price = $cart['product']['selling_price'];
-                                                        $total = $qty * $selling_price;
-                                                        $AllTotal +=$total;
-                                                    }else {
-                                                        $discount_price = $cart['product']['discount_price'];
-                                                        $total = $qty * $discount_price; 
-                                                        $AllTotal +=$total;
-
-                                                    }
-                                                }
-                                            @endphp
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>${{$AllTotal}}</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a href="{{route('mycart')}}" class="CheckOut btn mb-20 w-100">View cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                            </div>
+                           
                             <div class="header-action-icon-2">
                                 
                                 @auth
@@ -122,18 +42,10 @@
                                                 <li>
                                                     <a href="{{route('dashboard')}}">My Account</a>
                                                 </li>
-                                                <li>
-                                                    <a href="{{route('user.order.page')}}">Order Tracking</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('reply.message.page')}}"> My Message</a>
-                                                </li>
-                                                <li>
+                                                {{-- <li>
                                                     <a href="{{route('user.account.page')}}">Account Details</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('user.change.password')}}">Change Password</a>
-                                                </li>
+                                                </li> --}}
+                                                
                                                 <li>
                                                     <a href="{{route('user.logout')}}"><i class="fi fi-rs-sign-out mr-10"></i>Sign out</a>
                                                 </li>
@@ -156,12 +68,6 @@
         </div>
     </div>
 
-    @php
-        $categories = App\Models\Category::orderBy('category_name','ASC')->limit(6)->get();
-   
-        $route = Route::current()->getName();
-    @endphp
-
     <div class="header-bottom header-bottom-bg-color sticky-bar">
         <div class="container">
             <div class="header-wrap header-space-between position-relative">
@@ -174,29 +80,21 @@
                             <ul>
                                 
                                 <li>
-                                    <a class="{{ ($route ==  'home')? 'active':  '' }} " href="{{ url('/') }}">Home</a>
+                                    <a  href="{{ url('/') }}">Home</a>
+                                    
+                                    
+                                </li>
+                                <li>
+                                    <a class="active" href="{{ url('/user/chat') }}">Chat</a>
                                     
                                 </li>
 
-                                <li>
-                                    <a class="{{ ($route ==  'user.shop.page')? 'active':  '' }} "  href="{{route('user.shop.page')}}">Shop</a>
-                                </li>
-                                
-                                <li>
-                                    <a class="{{ ($route ==  'user.about.page')? 'active':  '' }} "  href="#">About</a>
-                                </li>
-                                <li>
-                                    <a class="{{ ($route ==  'user.contact.page')? 'active':  '' }} "  href="{{route('user.contact.page')}}">Contact</a>
-                                </li>
+                               
                             </ul>
                         </nav>
                     </div>
                     <div class="search-style-2">
-                        <form action="{{ route('product.search') }}" method="post">
-                            @csrf
-                            <input name="search" placeholder="Search for items..." />
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </form>
+                       
                     </div>
                 </div>
                 <div class="header-action-icon-2 d-block d-lg-none">
@@ -216,9 +114,7 @@
     <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
-                <div class="mobile-header-logo">
-                    <a href="index.html"><img src="{{asset('frontend/img/logo3.png')}}" alt="logo" /></a>
-                </div>
+                
                 <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                     <button class="close-style search-close">
                         <i class="icon-top"></i>
@@ -230,14 +126,7 @@
     
     
             <div class="mobile-header-content-area">
-                <div class="mobile-search search-style-3 mobile-header-border">
-                    <div class="search-style-2">
-                        <form action="{{ route('product.search') }}" method="post">
-                            @csrf
-                            <input name="search" placeholder="Search for items..." />
-                        </form>
-                    </div>
-                </div>
+                
                 <div class="mobile-menu-wrap mobile-header-border">
                     <!-- mobile menu start -->
                     <nav>
@@ -246,17 +135,12 @@
                                 <a class="active" href="{{ url('/') }}">Home</a>
                                 
                             </li>
+                            <li>
+                                <a class="active" href="">Chat</a>
+                                
+                            </li>
 
-                            <li>
-                                <a href="{{route('user.shop.page')}}">Shop</a>
-                            </li>
                             
-                            <li>
-                                <a href="#">About</a>
-                            </li>
-                            <li>
-                                <a href="{{route('user.contact.page')}}">Contact</a>
-                            </li>
                         </ul>
                     </nav>
                     <!-- mobile menu end -->

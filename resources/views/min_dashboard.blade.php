@@ -32,23 +32,12 @@
                                     <a class="nav-link {{ ($route ==  'dashboard')? 'active':  '' }} "   href="{{route('dashboard')}}" >Dashboard</a>
                                     <i class="fa-sharp fa-solid fa-plus"></i>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link {{ ($route ==  'user.order.page')? 'active':  '' }} "  href="{{route('user.order.page')}}" >Orders</a>
-                                    <i class="fa-sharp fa-solid fa-plus"></i>
-                                </li>
                                
-                                <li class="nav-item">
-                                    <a class="nav-link {{ ($route ==  'reply.message.page')? 'active':  '' }} "   href="{{route('reply.message.page')}}"  >Reply Message</a>
-                                    <i class="fa-sharp fa-solid fa-plus"></i>
-                                </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link {{ ($route ==  'user.account.page')? 'active':  '' }} "   href="{{route('user.account.page')}}"  >Account details</a>
                                     <i class="fa-sharp fa-solid fa-plus"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link {{ ($route ==  'user.change.password')? 'active':  '' }} "  href="{{route('user.change.password')}}"  >Change Password</a>
-                                    <i class="fa-sharp fa-solid fa-plus"></i>
-                                </li>
+                                </li> --}}
+                               
                                 <li class="nav-item">
                                     <a class="nav-link "  href="{{route('user.logout')}}">Logout</a>
                                     <i class="fa-sharp fa-solid fa-plus"></i>

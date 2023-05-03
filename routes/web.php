@@ -40,6 +40,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[IndexController::class,'Index'])->name('home');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/dashboard',[UserController::class,'UserDashboard'])->
@@ -51,17 +57,12 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/user/logout',[UserController::class,'UserDestroy'])->
     name('user.logout');
 
-    Route::post('/user/update/password',[UserController::class,'UserUpdatePassword'])->
-    name('user.update.password');
+    
 
 }); // Group Middleware End
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
 
 require __DIR__.'/auth.php';
 
@@ -76,277 +77,75 @@ Route::middleware(['auth','role:admin'])->group(function(){
     Route::get('/admin/profile',[AdminController::class,'AdminProfile'])->
     name('admin.profile');
 
+
+    ///// page All User ////
+
+    Route::get('/user/index/', [AdminController::class,'index'])->name('user.index');
+
+    Route::post('/user/store/', [AdminController::class,'UserStore'])->name('user.store');
+
+    Route::get('/user/{id}/edit/', [AdminController::class,'UserEdit'])->name('user.edit');
+
+    Route::post('/user/In/Active/', [AdminController::class,'In_Active'])->name('user.In.Active');
+
+    Route::post('/user/Active/', [AdminController::class,'Active'])->name('user.Active');
     
-    Route::post('/admin/profile/store',[AdminController::class,'AdminProfileStore'])->
-    name('admin.profile.store');
+    Route::delete('/user/delete/{id}/', [AdminController::class,'UserDelete'])->name('user.delete');
+    
+    ///// page Courses ////
 
-    Route::get('/admin/change/password',[AdminController::class,'AdminChangePassword'])->
-    name('admin.change.password');  
+    Route::get('/course/index/', [AdminController::class,'CourseIndex'])->name('course.index');
 
-      
-    Route::post('/admin/update/password',[AdminController::class,'AdminUpdatePassword'])->
-    name('update.password');
+    Route::post('/Courses/store/', [AdminController::class,'CoursesStore'])->name('Courses.store');
 
-   
+    Route::post('/Member/store/', [AdminController::class,'MemberStore'])->name('Member.store');
+    
+    Route::get('/Student/Mark/', [AdminController::class,'StudentMark'])->name('student.mark');
+    
+    Route::get('/student-all/ajax/{AllCourse}', [AdminController::class,'StudentAllAjax']);
+
+    Route::get('/student-get/ajax/{courses_id}', [AdminController::class,'CoursesGetAjax']);
+
+    Route::post('/student/store/Mark/', [AdminController::class,'StudentStoreMark'])->name('Student.Store.Mark');
+
+
+    
+    ///// page Chat ////
+
+    Route::get('/admin/chat',[AdminController::class,'AdminChat'])->
+    name('adminChat');
+
+    Route::post('/message/send/store/', [AdminController::class,'MessageSendStore'])->name('message.send.store');
+
+    Route::get('/receiver/get/data/{receiver_id}', [AdminController::class,'ReceiverGetData']);
+
+    Route::get('/receiver/message/{receiver_id}/{sender_id}', [AdminController::class,'ReceiverMessage']);
+
+    Route::get('/sender/message/{receiver_id}/{sender_id}', [AdminController::class,'SenderMessage']);
+
 
 });
 
-Route::middleware('auth','role:vendor')->group(function(){
-
-    Route::get('/vendor/dashboard',[VendorController::class,'VendorDashboard'])->
-    name('vendorDash');
-});
 Route::get('/admin/login',[AdminController::class,'AdminLogin'])->middleware(RedirectIfAuthenticated::class);
-
-
-
-
 
 Route::middleware(['auth','role:admin'])->group(function(){
     
-    /////////// Brand ///////////
-
-    Route::controller(BrandController::class)->group(function(){
-    
-        Route::get('/all/brand','AllBrand')->name('all.brand');
-        Route::get('/add/brand','AddBrand')->name('add.brand');
-        Route::post('/store/brand','StoreBrand')->name('store.brand');
-
-        Route::get('/edit/brand/{id}','EditBrand')->name('edit.brand');
-        Route::post('/update/brand','UpdateBrand')->name('update.brand');
-
-        Route::get('/delete/brand/{id}','DeleteBrand')->name('delete.brand');
-        
-    });
-
-
-
-    /////////// Category ///////////
-
-    Route::controller(CategoryController::class)->group(function(){
-    
-        Route::get('/all/category','AllCategory')->name('all.category');
-
-        Route::get('/add/category','AddCategory')->name('add.category');
-        Route::post('/store/category','StoreCategory')->name('store.category');
-
-        Route::get('/edit/category/{id}','EditCategory')->name('edit.category');
-        Route::post('/update/category','UpdateCategory')->name('update.category');
-
-        Route::get('/delete/category/{id}','DeleteCategory')->name('delete.category');
-        
-    });
-
-
-    
-
-    /////////// Product ///////////
-
-    Route::controller(ProductController::class)->group(function(){
-    
-        Route::get('/all/product','AllProduct')->name('all.product');
-        Route::get('/add/product','AddProduct')->name('add.product');
-       
-        Route::post('/store/product','StoreProduct')->name('store.product');
-
-        Route::get('/edit/product/{id}','EditProduct')->name('edit.product');
-
-        Route::post('/update/product','UpdateProduct')->name('update.product');
-        Route::post('/update/product/thambnail','UpdateProductThambnail')->name('update.product.thambnail');
-        Route::post('/update/product/multiImage','UpdateProductMultiImage')->name('update.product.multiImage');
-
-        Route::get('/product/multiImage/delete/{id}','MultiImageDelete')->name('product.multiImg.delete');
-        Route::get('product/inactive/{id}','ProductInactive')->name('product.inactive');
-        Route::get('product/active/{id}','ProductActive')->name('product.active');
-
-        Route::get('delete/product/{id}','DeleteProduct')->name('delete.product');
-        
-    });
-
-    
-    /////////// Slider ///////////
-
-    Route::controller(SliderController::class)->group(function(){
-    
-        Route::get('/all/slider','AllSlider')->name('all.slider');
-
-        Route::get('/add/slider','AddSlider')->name('add.slider');
-        Route::post('/store/slider','StoreSlider')->name('store.slider');
-
-        Route::get('/edit/slider/{id}','EditSlider')->name('edit.slider');
-        Route::post('/update/slider','UpdateSlider')->name('update.slider');
-
-        Route::get('/delete/slider/{id}','DeleteSlider')->name('delete.slider');
-        
-    });
-
-
-    
-    /////////// Banner ///////////
-
-    Route::controller(BannerController::class)->group(function(){
-    
-        Route::get('/all/banner','AllBanner')->name('all.banner');
-
-        Route::get('/add/banner','AddBanner')->name('add.banner');
-        Route::post('/store/banner','StoreBanner')->name('store.banner');
-
-        Route::get('/edit/banner/{id}','EditBanner')->name('edit.banner');
-        Route::post('/update/banner','UpdateBanner')->name('update.banner');
-
-        Route::get('/delete/banner/{id}','DeleteBanner')->name('delete.banner');
-        
-    });
-
-    /////////// coupon ///////////
-
-    Route::controller(CouponController::class)->group(function(){
-    
-        Route::get('/all/coupon','AllCoupon')->name('all.coupon');
-
-        Route::get('/add/coupon','AddCoupon')->name('add.coupon');
-        Route::post('/store/coupon','StoreCoupon')->name('store.coupon');
-
-        Route::get('/edit/coupon/{id}','EditCoupon')->name('edit.coupon');
-        Route::post('/update/coupon','UpdateCoupon')->name('update.coupon');
-
-        Route::get('/delete/coupon/{id}','DeleteCoupon')->name('delete.coupon');
-        
-       
-
-    });
-
-    
-
-    /////////// Shipping State  ///////////
-
-    Route::controller(ShippingAreaController::class)->group(function(){
-    
-        Route::get('/all/state','AllState')->name('all.state');
-
-        Route::get('/add/state','AddState')->name('add.state');
-        Route::post('/store/state','StoreState')->name('store.state');
-
-        Route::get('/edit/state/{id}','EditState')->name('edit.state');
-        Route::post('/update/state','UpdateState')->name('update.state');
-
-        Route::get('/delete/state/{id}','DeleteState')->name('delete.state');
-        
-        Route::get('/district/ajax/{division_id}','GetDistrict');
-
-    });
-
-
-    Route::controller(OrderController::class)->group(function(){
-    
-        Route::get('/pending/order','PendingOrder')->name('pending.order');
-        Route::get('/admin/order/details/{order_id}','AdminOrderDetails')->name('admin.order.details');
-
-        Route::get('/admin/delivered/order' , 'AdminDeliveredOrder')->name('admin.delivered.order');
-
-        Route::get('/processing/delivered/{order_id}' , 'ProcessToDelivered')->name('processing-delivered');
-
-        Route::get('/admin/invoice/download/{order_id}' , 'AdminInvoiceDownload')->name('admin.invoice.download');
-      
-
-    });
-
-    Route::controller(ContactController::class)->group(function(){
-       
-        Route::get('/all/message','AllMessage')->name('all.message');
-        Route::get('/delete/message/{id}','DeleteMessage')->name('delete.message');
-        Route::get('/reply/message/{id}','ReplyMessage')->name('reply.message');
-        Route::post('/store/replymessage/','StoreReplyMessage')->name('store.replymessage');
-
-        Route::get('/all/replymessage/','AllReplyMessage')->name('all.replymessage');
-        Route::get('/delete/replymessage/{id}','DeleteReplyMessage')->name('delete.replymessage');
-
-
-    });
+   
+   
 
 }); // admin End Middleware
 
 
-/// frontend product details
-
-Route::get('/product/details/{id}/{slug}',[IndexController::class,'ProductDetails']);
-
-/// frontend category 
-Route::get('/product/category/{id}/{slug}',[IndexController::class,'CatWiseProduct']);
-
-// Product View Model With Ajax
-Route::get('/product/view/model/{id}/',[IndexController::class,'ProductViewAjax']);
-
-
-
 Route::middleware(['auth','role:user'])->group(function(){
 
-    Route::controller(CartController::class)->group(function(){
+    Route::get('/user/chat',[UserController::class,'UserChat'])->
+    name('UserChat');
 
-        // add to cart store data 
-        Route::post('/cart/data/store/{id}/','AddToCart');
-        
-        // view cart details
-        Route::get('/mycart','MyCart')->name('mycart');
+    Route::get('User/Same/Course', [UserController::class,'UserSameCourse'])->name('user.same.course');
 
-        Route::get('/delete/cart/{id}','DeleteCart')->name('delete.cart');
 
-        // checkout page route
-        Route::get('/checkout/{AllTotal}','CheckoutCreate')->name('checkout');
-
-    });
 
   
-
-    // Stripe All Route 
-
-    Route::controller(StripeController::class)->group(function(){
-        Route::post('/stripe/order' , 'StripeOrder')->name('stripe.order');
-        Route::post('/cash/order' , 'CashOrder')->name('cash.order');
-    
-
-    }); 
-
-    Route::controller(AllUserController::class)->group(function(){
-
-        Route::get('/user/account/page','UserAccount')->name('user.account.page');
-        
-        Route::get('/user/change/password','UserChangePassword')->name('user.change.password');
-        
-        Route::get('/user/order/page','UserOrderPage')->name('user.order.page');
-        
-        Route::get('/reply/page','ReplyMessagePage')->name('reply.message.page');
-        
-        Route::get('/user/order_details/{order_id}','UserOrderDetails');
-        
-        Route::get('/user/invoice_download/{order_id}','UserOrderInvoice');
-
-    });
-
-   
-    
-   
 }); // End Middleware
 
-Route::controller(ReviewController::class)->group(function(){
-
-    Route::post('/store/review' , 'StoreReview')->name('store.review'); 
-    Route::get('/pending/review' , 'PendingReview')->name('pending.review'); 
-    Route::get('/review/approve/{id}' , 'ReviewApprove')->name('review.approve'); 
-    Route::get('/publish/review' , 'PublishReview')->name('publish.review'); 
-    Route::get('/review/delete/{id}' , 'ReviewDelete')->name('review.delete');
-
-});
-
-Route::controller(IndexController::class)->group(function(){
-        
-    Route::get('/user/shop/page','ShopPage')->name('user.shop.page');
-
-    Route::get('/user/contact/page','ContactPage')->name('user.contact.page');
-
-    Route::post('/store/contact','StoreContact')->name('store.contact');
-
-    Route::post('/search' , 'ProductSearch')->name('product.search'); 
-
-});
 
